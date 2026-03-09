@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>UV Safari</title>
+  <meta name="theme-color" content="#007AFF"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/icon-192.png"/>
+
+  <!-- iOS Safari feel: standalone, no UI chrome -->
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="app">
+    <div id="proxy-view">
+      <!-- Proxied content will load here via rewritten src -->
+      <iframe id="proxy-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-top-navigation-by-user-activation" allowfullscreen></iframe>
+    </div>
+
+    <!-- Floating bottom toolbar (iOS 26+ compact style) -->
+    <div id="toolbar" class="toolbar">
+      <div class="nav-group">
+        <button id="back" class="nav-btn" aria-label="Go Back" disabled>←</button>
+        <button id="forward" class="nav-btn" aria-label="Go Forward" disabled>→</button>
+        <button id="refresh" class="nav-btn" aria-label="Refresh">↻</button>
+      </div>
+
+      <div class="address-group">
+        <input type="url" id="urlbar" placeholder="Search or enter website" autocomplete="off"/>
+        <button id="go" class="go-btn">Go</button>
+      </div>
+
+      <div id="error-message" class="error hidden"></div>
+    </div>
+  </div>
+
+  <!-- Scripts – use modern ESM imports -->
+  <script type="module" src="app.js"></script>
+
+  <!-- Register service worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('SW registered', reg))
+          .catch(err => console.error('SW failed', err));
+      });
+    }
+  </script>
+</body>
+</html>
